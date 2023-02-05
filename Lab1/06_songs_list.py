@@ -25,9 +25,6 @@ violator_songs_list = [
 
 # TODO здесь ваш код
 sum1 = violator_songs_list[3][1] + violator_songs_list[5][1] + violator_songs_list[-1][1]
-import os 
-#Type 
-os.system('CLS') 
 print('Три песни звучат', round(sum1,2), 'минут')
 # Есть словарь песен группы Depeche Mode
 violator_songs_dict = {
@@ -48,4 +45,3 @@ violator_songs_dict = {
 # TODO здесь ваш код
 s = violator_songs_dict['Sweetest Perfection'] + violator_songs_dict['Policy of Truth'] + violator_songs_dict['Blue Dress']
 print('А другие три песни звучат', round(s), 'минут')
-os.system('pause')
