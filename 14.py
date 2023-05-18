@@ -1,17 +1,14 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, text
-fromfrom sqlalchemy import create_engine, Column, Integer, String, ForeignKey, text
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# Создаем движок базы данных и сессию
 engine = create_engine('sqlite:///university.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Создаем базовый класс для моделей
 Base = declarative_base()
 
-# Модель "Дисциплины"
+
 class Discipline(Base):
     __tablename__ = 'Discipline'
 
@@ -27,7 +24,6 @@ class Discipline(Base):
     def __repr__(self):
         return f"<Discipline(name='{self.name}', lectures='{self.lectures}', practices='{self.practices}', labs='{self.labs}')>"
 
-# Модель "Кафедры"
 class Department(Base):
     __tablename__ = 'departments'
 
@@ -37,11 +33,8 @@ class Department(Base):
 
     def __repr__(self):
         return f"<Department(name='{self.name}')>"
-
-# Создаем таблицы в базе данных
 Base.metadata.create_all(engine)
 
-# Заполняем базу данных тестовыми данными
 department1 = Department(name='Department of Mathematics')
 department2 = Department(name='Department of Physics')
 
@@ -52,7 +45,8 @@ discipline3 = Discipline(name='Quantum Mechanics', lectures=50, practices=15, la
 session.add_all([department1, department2, discipline1, discipline2, discipline3])
 session.commit()
 
-def execute_user_query(user_query):
+def execute_user_query():
+    user_query = input("Введите ваш запрос SQL: ")
     result = session.execute(text(user_query))
     for row in result:
         discipline_name = row[0]
@@ -61,8 +55,7 @@ def execute_user_query(user_query):
         labs = row[3]
         print(f"Discipline: {discipline_name}, Lectures: {lectures}, Practices: {practices}, Labs: {labs}")
 
-# Выполнение запроса пользователя
-user_query = "SELECT name, lectures, practices, labs FROM Discipline"
-execute_user_query(user_query)
+
+execute_user_query()
 
 session.close()
