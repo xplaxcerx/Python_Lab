@@ -46,7 +46,7 @@ session.add_all([department1, department2, discipline1, discipline2, discipline3
 session.commit()
 
 def execute_user_query():
-    user_query = input("Enter your SQL query: ")
+    user_query = input("Введите запрос в форме Sql: ")
     result = session.execute(text(user_query))
     for row in result:
         print(row)
