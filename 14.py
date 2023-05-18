@@ -12,7 +12,7 @@ Base = declarative_base()
 
 # Модель "Дисциплины"
 class Discipline(Base):
-    __tablename__ = 'Discipline'  # Исправленное название таблицы
+    __tablename__ = 'Discipline'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
@@ -51,14 +51,17 @@ discipline3 = Discipline(name='Quantum Mechanics', lectures=50, practices=15, la
 session.add_all([department1, department2, discipline1, discipline2, discipline3])
 session.commit()
 
-def execute_user_query():
-    user_query = input("Введите ваш запрос SQL: ")
+def execute_user_query(user_query):
     result = session.execute(text(user_query))
     for row in result:
-        print(row)
+        discipline_name = row[0]
+        lectures = row[1]
+        practices = row[2]
+        labs = row[3]
+        print(f"Discipline: {discipline_name}, Lectures: {lectures}, Practices: {practices}, Labs: {labs}")
 
 # Выполнение запроса пользователя
-execute_user_query()
+user_query = "SELECT name, lectures, practices, labs FROM Discipline"
+execute_user_query(user_query)
 
 session.close()
-
