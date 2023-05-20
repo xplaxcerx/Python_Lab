@@ -1,77 +1,52 @@
 типа вот#include <stdio.h>
-#include <stdlib.h>
+#include#include <stdio.h>
 #include <math.h>
 
 double f(double x) {
- return cos(x) - x;
+    return cos(sqrt(x)) - x;
 }
 
 double g(double x) {
- return cos(x) / sqrt(1 + x);
-}
-
-void create_matrix(double **a, int n, int m) {
- for (int i = 0; i < n; i++) {
- for (int j = 0; j < m; j++) {
- a[i][j] = f(i+1) + g(j+1);
- }
- }
-}
-
-void transpose(double **a, int n) {
- for (int i = 0; i < n; i++) {
- for (int j = 0; j < i; j++) {
- double tmp = a[i][j];
- a[i][j] = a[j][i];
- a[j][i] = tmp;
- }
- }
-}
-
-double **multiply_matrices(double **a, double **b, int n, int m, int p) {
- double **c = (double **) malloc(n * sizeof(double *));
- for (int i = 0; i < n; i++) {
- c[i] = (double *) malloc(p * sizeof(double));
- for (int j = 0; j < p; j++) {
- c[i][j] = 0.0;
- for (int k = 0; k < m; k++) {
- c[i][j] += a[i][k] * b[k][j];
- }
- }
- }
- return c;
-}
-
-double calculate_n(double **a, int n) {
- double **adT_a = (double **) malloc(n * sizeof(double *));
- for (int i = 0; i < n; i++) {
- adT_a[i] = (double *) malloc(n * sizeof(double));
- for (int j = 0; j < n; j++) {
- adT_a[i][j] = a[j][n-i-1];
- }
- }
- double **b = multiply_matrices(a, adT_a, n, n, n);
- double min_abs_b = fabs(b[0][0]);
- for (int i = 0; i < n; i++) {
- for (int j = 0; j < n; j++) {
- if (fabs(b[i][j]) < min_abs_b) {
- min_abs_b = fabs(b[i][j]);
- }
- }
- }
- double n_a = sqrt(min_abs_b);
- return n_a;
+    return cos(x) / sqrt(1 + x);
 }
 
 int main() {
- int n = 10, m = 10;
- double **a = (double **) malloc(n * sizeof(double *));
- for (int i = 0; i < n; i++) {
- a[i] = (double *) malloc(m * sizeof(double));
- }
- create_matrix(a, n, m);
- transpose(a, n);
- double n_a = calculate_n(a, n);
- printf("N(A) = %f\n", n_a);
- return 0;
+    int n = 10;
+    int m = 10;
+    double A[10][10];
+    double B[10][10];
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            A[i][j] = f(i + 1) + g(j + 1);
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            B[i][j] = A[n - 1 - j][m - 1 - i];
+        }
+    }
+
+    double result_matrix[10][10];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            result_matrix[i][j] = 0;
+            for (int k = 0; k < m; k++) {
+                result_matrix[i][j] += B[i][k] * A[k][j];
+            }
+        }
+    }
+
+    double T = 100000;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (result_matrix[i][j] < T) {
+                T = fabs(result_matrix[i][j]);
+            }
+        }
+    }
+    printf("%lf\n", sqrt(T));
+
+    return 0;
 }
