@@ -1,5 +1,4 @@
-типа вот#include <stdio.h>
-#include#include <stdio.h>
+#include <stdio.h>
 #include <math.h>
 
 double f(double x) {
@@ -50,3 +49,4 @@ int main() {
 
     return 0;
 }
+
