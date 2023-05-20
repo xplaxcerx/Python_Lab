@@ -1,8 +1,4 @@
 from math import *
-from code import calculate_sqrt
-
-result = calculate_sqrt()
-print(result)
 
 n = 10
 m = 10
