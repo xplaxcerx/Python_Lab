@@ -1,35 +1,39 @@
-from libc.math cimport cos, sqrt
-import numpy as np
+from math import sqrt, cos
+import cython
 
-cdef double f(double x) nogil:
-    return cos(sqrt(x)) - x
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def calculate_sqrt():
+    result = 0.0
+    for i in range(1, 1000000):
+        result += sqrt(i)
+    return result
 
-cdef double g(double x) nogil:
-    return cos(x) / sqrt(1 + x)
+def main():
+    result = calculate_sqrt()
+    print(result)
 
-cpdef double calculate_sqrt():
-    cdef int n = 10
-    cdef int m = 10
+    n = 10
+    m = 10
 
-    cdef double[:, :] A = np.zeros((n, m), dtype=np.float64)
-    cdef double[:, :] B = np.zeros((m, n), dtype=np.float64)
+    f = lambda x: cos(sqrt(x)) - x
+    g = lambda x: cos(x) / sqrt(1 + x)
 
-    cdef int i, j
+    A = [[f(i) + g(j) for j in range(1, n + 1)] for i in range(1, m + 1)]
+    B = [[0 for i in range(n)] for i in range(m)]
+
     for i in range(n):
         for j in range(m):
-            B[i, j] = A[n-1-j, m-1-i]
+            B[i][j] = A[n - 1 - j][m - 1 - i]
 
-    cdef double[:, :] result_matrix = np.zeros((n, m), dtype=np.float64)
-    cdef int k
+    result_matrix = [[sum(a * b for a, b in zip(Arow, Bcol)) for Bcol in zip(*A)] for Arow in B]
+
+    T = 100000
     for i in range(n):
         for j in range(m):
-            result_matrix[i, j] = 0
-            for k in range(n):
-                result_matrix[i, j] += A[i, k] * B[k, j]
+            if result_matrix[i][j] < T:
+                T = abs(result_matrix[i][j])
+    print(sqrt(T))
 
-    cdef double T = 100000
-    for i in range(n):
-        for j in range(m):
-            if result_matrix[i, j] < T:
-                T = abs(result_matrix[i, j])
-    return sqrt(T)
+if __name__ == "__main__":
+    main()
